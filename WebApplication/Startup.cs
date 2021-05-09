@@ -28,6 +28,7 @@ namespace WebApplication
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(_configuration);
+            services.ConfigureRepositoryManager();
 
             services.AddControllers();
         }

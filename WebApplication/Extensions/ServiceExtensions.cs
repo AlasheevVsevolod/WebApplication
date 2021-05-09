@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Repository;
 
 namespace WebApplication.Extensions
 {
@@ -35,6 +36,11 @@ namespace WebApplication.Extensions
         {
             services.AddDbContext<RepositoryContext>(o => o.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
                 b=> b.MigrationsAssembly("WebApplication")));
+        }
+
+        public static void ConfigureRepositoryManager(this IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
         }
     }
 }
