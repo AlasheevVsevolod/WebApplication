@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Contracts
+﻿namespace WebApplication.Logger
 {
     public interface ILoggerManager
     {

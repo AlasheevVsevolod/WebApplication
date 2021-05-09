@@ -1,7 +1,4 @@
-﻿using Contracts;
-using Entities;
-
-namespace Repository
+﻿namespace WebApplication.Repository
 {
     public class RepositoryManager : IRepositoryManager
     {

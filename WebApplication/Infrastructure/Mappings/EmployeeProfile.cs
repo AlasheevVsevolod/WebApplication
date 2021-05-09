@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Entities.DataTransferObjects;
-using Entities.Models;
+using WebApplication.Models;
 
 namespace WebApplication.Infrastructure.Mappings
 {

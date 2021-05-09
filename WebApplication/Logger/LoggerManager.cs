@@ -1,11 +1,10 @@
-﻿using Contracts;
-using NLog;
+﻿using NLog;
 
-namespace LoggerService
+namespace WebApplication.Logger
 {
     public class LoggerManager : ILoggerManager
     {
-        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = LogManager.GetCurrentClassLogger();
         
         public LoggerManager()
         {

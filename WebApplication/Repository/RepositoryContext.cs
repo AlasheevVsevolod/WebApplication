@@ -1,8 +1,8 @@
-﻿using Entities.Configuration;
-using Entities.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApplication.DatabaseConfiguration;
+using WebApplication.Models;
 
-namespace Entities
+namespace WebApplication.Repository
 {
     public class RepositoryContext : DbContext
     {

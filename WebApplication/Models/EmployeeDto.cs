@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Entities.DataTransferObjects
+namespace WebApplication.Models
 {
     public class EmployeeDto
     {

@@ -1,9 +1,9 @@
 ﻿using System;
-using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebApplication.Models;
 
-namespace Entities.Configuration
+namespace WebApplication.DatabaseConfiguration
 {
     public class CompanyConfiguration : IEntityTypeConfiguration<Company>
     {

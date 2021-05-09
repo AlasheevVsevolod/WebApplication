@@ -2,14 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{B294C005-20CC-45B7-91DB-79A2D9B07826}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{1B2AECF3-6491-4080-A012-2241A36B57DD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "LoggerService\LoggerService.csproj", "{CDADA198-E53D-4587-85EC-F8F0088F328F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{CF5F77F9-CB83-403F-84B4-69AA76601B1A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{0BD15F06-7209-42B4-9D9F-EB39FA8E1E6A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,21 +12,5 @@ Global
 		{B294C005-20CC-45B7-91DB-79A2D9B07826}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B294C005-20CC-45B7-91DB-79A2D9B07826}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B294C005-20CC-45B7-91DB-79A2D9B07826}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B2AECF3-6491-4080-A012-2241A36B57DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B2AECF3-6491-4080-A012-2241A36B57DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B2AECF3-6491-4080-A012-2241A36B57DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B2AECF3-6491-4080-A012-2241A36B57DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDADA198-E53D-4587-85EC-F8F0088F328F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDADA198-E53D-4587-85EC-F8F0088F328F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDADA198-E53D-4587-85EC-F8F0088F328F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDADA198-E53D-4587-85EC-F8F0088F328F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF5F77F9-CB83-403F-84B4-69AA76601B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF5F77F9-CB83-403F-84B4-69AA76601B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF5F77F9-CB83-403F-84B4-69AA76601B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF5F77F9-CB83-403F-84B4-69AA76601B1A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BD15F06-7209-42B4-9D9F-EB39FA8E1E6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BD15F06-7209-42B4-9D9F-EB39FA8E1E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BD15F06-7209-42B4-9D9F-EB39FA8E1E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BD15F06-7209-42B4-9D9F-EB39FA8E1E6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

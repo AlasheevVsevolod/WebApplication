@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Entities.Models;
+using WebApplication.Models;
 
-namespace Contracts
+namespace WebApplication.Repository
 {
     public interface ICompanyRepository
     {

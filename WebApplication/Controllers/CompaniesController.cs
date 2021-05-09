@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
-using Contracts;
-using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.Logger;
+using WebApplication.Models;
+using WebApplication.Repository;
 
 namespace WebApplication.Controllers
 {
