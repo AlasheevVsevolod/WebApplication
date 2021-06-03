@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Logger;
@@ -22,21 +21,15 @@ namespace WebApplication.Controllers
             _repository = repository;
             _mapper = mapper;
         }
-        
+
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            try
-            {
-                var employees = _repository.Employee.GetAllEmployees(trackChanges: false);
-                var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
-                return Ok(employeesDto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetEmployees)} action {e}"); 
-                return StatusCode(500, "Internal server error");
-            }
+            var employees = _repository.Employee.GetAllEmployees(trackChanges: false);
+
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+
+            return Ok(employeesDto);
         }
     }
 }
