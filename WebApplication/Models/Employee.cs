@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Models
 {
-    public class Employee
+    public class Employee : BaseDatabaseEntity
     {
         [Column("EmployeeId")]
-        public Guid Id { get; set; }
+        public new Guid Id { get; set; }
 
         [Required(ErrorMessage = "Employee name is a required field.")]
         [MaxLength(30, ErrorMessage = "Maximum length for the Name is 30 characters.")]

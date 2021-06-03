@@ -1,4 +1,6 @@
-﻿namespace WebApplication.Repository
+﻿using WebApplication.Repository.Interface;
+
+namespace WebApplication.Repository.Concrete
 {
     public class RepositoryManager : IRepositoryManager
     {

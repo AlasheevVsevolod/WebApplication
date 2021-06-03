@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.Infrastructure.Messages;
 using WebApplication.Logger;
 using WebApplication.Models;
-using WebApplication.Repository;
+using WebApplication.Services.Interface;
 
 namespace WebApplication.Controllers
 {
@@ -12,24 +14,54 @@ namespace WebApplication.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly ILoggerManager _logger;
-        private readonly IRepositoryManager _repository;
-        private readonly IMapper _mapper;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeesController(ILoggerManager logger, IRepositoryManager repository, IMapper mapper)
+        public EmployeesController(ILoggerManager logger, IEmployeeService employeeService)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _employeeService = employeeService;
         }
 
+        /// <summary>
+        /// Gets all employees without any filter
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Returns all employees</response>
         [HttpGet]
+        [Produces(typeof(IEnumerable<EmployeeDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetEmployees()
         {
-            var employees = _repository.Employee.GetAllEmployees(trackChanges: false);
+            var employees = _employeeService.GetAllEmployees(trackChanges: false);
 
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+            return Ok(employees);
+        }
 
-            return Ok(employeesDto);
+        /// <summary>
+        /// Gets employee, based on the give Id
+        /// </summary>
+        /// <param name="id">Id of the employee to search by</param>
+        /// <returns></returns>
+        /// <response code="200">Returns found employee</response>
+        /// <response code="404">If employee wasn't found</response>
+        [HttpGet("{id}")]
+        [Produces(typeof(EmployeeDto))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetEmployeeById(Guid id)
+        {
+            var employee = _employeeService.GetEmployeeById(id, trackChanges: false);
+
+            if (employee == null)
+            {
+                var message = string.Format(ErrorMessages.EmployeeNotFound, id);
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            return Ok(employee);
         }
     }
 }

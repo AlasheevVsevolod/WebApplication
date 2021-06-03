@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebApplication.Logger;
-using WebApplication.Repository;
+using WebApplication.Repository.Concrete;
+using WebApplication.Repository.Interface;
+using WebApplication.Services.Concrete;
+using WebApplication.Services.Interface;
 
 namespace WebApplication.Extensions
 {
@@ -30,6 +36,12 @@ namespace WebApplication.Extensions
             services.AddScoped<ILoggerManager, LoggerManager>();
         }
 
+        public static void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+        }
+
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<RepositoryContext>(o => o.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
@@ -39,6 +51,17 @@ namespace WebApplication.Extensions
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+        }
+
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
     }
 }
