@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
 using WebApplication.Logger;
-using WebApplication.Models;
-using WebApplication.Repository.Interface;
+using WebApplication.Services.Interface;
 
 namespace WebApplication.Controllers
 {
@@ -14,22 +11,21 @@ namespace WebApplication.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly ILoggerManager _logger;
-        private readonly IRepositoryManager _repository;
-        private readonly IMapper _mapper;
+        private readonly ICompanyService _companyService;
+        private readonly IEmployeeService _employeeService;
 
-        public CompaniesController(ILoggerManager logger, IRepositoryManager repository, IMapper mapper)
+
+        public CompaniesController(ILoggerManager logger, ICompanyService companyService,  IEmployeeService employeeService)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _companyService = companyService;
+            _employeeService = employeeService;
         }
 
         [HttpGet]
         public IActionResult GetCompanies()
         {
-            var companies = _repository.Company.GetAllCompanies(trackChanges: false);
-
-            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+            var companiesDto = _companyService.GetAllCompanies(trackChanges: false);
 
             return Ok(companiesDto);
         }
@@ -37,7 +33,7 @@ namespace WebApplication.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCompanyById(Guid id)
         {
-            var company = _repository.Company.GetCompanyById(id, trackChanges: false);
+            var company = _companyService.GetCompanyById(id, trackChanges: false);
 
             if (company == null)
             {
@@ -48,15 +44,13 @@ namespace WebApplication.Controllers
                 return NotFound(message);
             }
 
-            var companyDto = _mapper.Map<CompanyDto>(company);
-
-            return Ok(companyDto);
+            return Ok(company);
         }
 
         [HttpGet("{companyId}/employees")]
         public IActionResult GetEmployeesByCompanyId(Guid companyId)
         {
-            var company = _repository.Company.GetCompanyById(companyId, trackChanges: false);
+            var company = _companyService.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
@@ -66,17 +60,15 @@ namespace WebApplication.Controllers
                 return NotFound(message);
             }
 
-            var employees = _repository.Employee.GetAllEmployeesForCompany(companyId, trackChanges: false);
+            var employees = _employeeService.GetAllEmployeesForCompany(companyId, trackChanges: false);
 
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
-
-            return Ok(employeesDto);
+            return Ok(employees);
         }
 
         [HttpGet("{companyId}/employees/{employeeId}")]
         public IActionResult GetEmployeesByCompanyId(Guid companyId, Guid employeeId)
         {
-            var company = _repository.Company.GetCompanyById(companyId, trackChanges: false);
+            var company = _companyService.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
@@ -86,20 +78,18 @@ namespace WebApplication.Controllers
                 return NotFound(message);
             }
 
-            var employee = _repository.Employee.GetEmployeeForCompany(companyId, employeeId, trackChanges: false);
+            var employee = _employeeService.GetEmployeeForCompany(companyId, employeeId, trackChanges: false);
 
             if (employee == null)
             {
-                var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
+                var message = string.Format(ErrorMessages.CompanyDontHaveEmployee, employeeId, companyId);
 
                 _logger.LogInfo(message);
 
                 return NotFound(message);
             }
 
-            var employeeDto = _mapper.Map<EmployeeDto>(employee);
-
-            return Ok(employeeDto);
+            return Ok(employee);
         }
     }
 }

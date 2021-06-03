@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
 using WebApplication.Logger;
-using WebApplication.Models;
-using WebApplication.Repository.Interface;
+using WebApplication.Services.Interface;
 
 namespace WebApplication.Controllers
 {
@@ -14,30 +11,26 @@ namespace WebApplication.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly ILoggerManager _logger;
-        private readonly IRepositoryManager _repository;
-        private readonly IMapper _mapper;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeesController(ILoggerManager logger, IRepositoryManager repository, IMapper mapper)
+        public EmployeesController(ILoggerManager logger, IEmployeeService employeeService)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
+            _employeeService = employeeService;
         }
 
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            var employees = _repository.Employee.GetAllEmployees(trackChanges: false);
+            var employees = _employeeService.GetAllEmployees(trackChanges: false);
 
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
-
-            return Ok(employeesDto);
+            return Ok(employees);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetEmployeeById(Guid id)
         {
-            var employee = _repository.Employee.GetEmployeeById(id, trackChanges: false);
+            var employee = _employeeService.GetEmployeeById(id, trackChanges: false);
 
             if (employee == null)
             {
@@ -48,9 +41,7 @@ namespace WebApplication.Controllers
                 return NotFound(message);
             }
 
-            var employeeDto = _mapper.Map<EmployeeDto>(employee);
-
-            return Ok(employeeDto);
+            return Ok(employee);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace WebApplication
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
+            services.ConfigureServices();
             services.ConfigureSqlContext(_configuration);
             services.ConfigureRepositoryManager();
 

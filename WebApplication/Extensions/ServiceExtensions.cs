@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using WebApplication.Logger;
 using WebApplication.Repository.Concrete;
 using WebApplication.Repository.Interface;
+using WebApplication.Services.Concrete;
+using WebApplication.Services.Interface;
 
 namespace WebApplication.Extensions
 {
@@ -29,6 +31,12 @@ namespace WebApplication.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddScoped<ILoggerManager, LoggerManager>();
+        }
+
+        public static void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
         }
 
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
