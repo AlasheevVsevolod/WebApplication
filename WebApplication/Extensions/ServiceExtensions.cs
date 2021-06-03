@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebApplication.Logger;
-using WebApplication.Repository;
+using WebApplication.Repository.Concrete;
+using WebApplication.Repository.Interface;
 
 namespace WebApplication.Extensions
 {

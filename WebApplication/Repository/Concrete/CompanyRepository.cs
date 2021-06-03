@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebApplication.Models;
+using WebApplication.Repository.Interface;
 
-namespace WebApplication.Repository
+namespace WebApplication.Repository.Concrete
 {
     public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
     {
-        public CompanyRepository(RepositoryContext repositoryContext) 
+        public CompanyRepository(RepositoryContext repositoryContext)
             : base(repositoryContext)
         {
         }
@@ -16,6 +18,11 @@ namespace WebApplication.Repository
             return FindAll(trackChanges)
                 .OrderBy(c => c.Name)
                 .ToList();
+        }
+
+        public Company GetCompanyById(Guid companyId, bool trackChanges)
+        {
+            return GetSingleById(companyId, trackChanges);
         }
     }
 }

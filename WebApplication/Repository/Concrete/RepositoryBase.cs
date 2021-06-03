@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using WebApplication.Models;
+using WebApplication.Repository.Interface;
 
-namespace WebApplication.Repository
+namespace WebApplication.Repository.Concrete
 {
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : BaseDatabaseEntity
     {
         private readonly RepositoryContext _repositoryContext;
 
@@ -31,5 +33,11 @@ namespace WebApplication.Repository
         public void Create(T entity) => _repositoryContext.Set<T>().Add(entity);
         public void Update(T entity) => _repositoryContext.Set<T>().Update(entity);
         public void Delete(T entity) => _repositoryContext.Set<T>().Remove(entity);
+
+        public T GetSingleById(Guid entityId, bool trackChanges)
+        {
+            return FindByCondition(c => c.Id.Equals(entityId), trackChanges)
+                .SingleOrDefault();
+        }
     }
 }

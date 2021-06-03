@@ -2,7 +2,7 @@
 using WebApplication.DatabaseConfiguration;
 using WebApplication.Models;
 
-namespace WebApplication.Repository
+namespace WebApplication.Repository.Concrete
 {
     public class RepositoryContext : DbContext
     {
