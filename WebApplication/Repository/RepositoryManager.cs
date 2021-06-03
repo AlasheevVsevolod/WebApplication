@@ -3,9 +3,9 @@
     public class RepositoryManager : IRepositoryManager
     {
         private readonly RepositoryContext _context;
-        private CompanyRepository _companyRepository;
-        private EmployeeRepository _employeeRepository;
-        
+        private ICompanyRepository _companyRepository;
+        private IEmployeeRepository _employeeRepository;
+
         public RepositoryManager(RepositoryContext context)
         {
             _context = context;
@@ -23,7 +23,7 @@
                 return _companyRepository;
             }
         }
-        
+
         public IEmployeeRepository Employee
         {
             get
