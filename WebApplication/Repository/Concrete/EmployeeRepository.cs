@@ -24,5 +24,17 @@ namespace WebApplication.Repository.Concrete
         {
             return GetSingleById(employeeId, trackChanges);
         }
+
+        public IEnumerable<Employee> GetAllEmployeesForCompany(Guid companyId, bool trackChanges)
+        {
+            return FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+                .OrderBy(e => e.Name);
+        }
+
+        public Employee GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges)
+        {
+            return FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId), trackChanges)
+                .SingleOrDefault();
+        }
     }
 }

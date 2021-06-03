@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.Infrastructure.Messages;
 using WebApplication.Logger;
 using WebApplication.Models;
-using WebApplication.Repository;
 using WebApplication.Repository.Interface;
 
 namespace WebApplication.Controllers
@@ -41,9 +41,11 @@ namespace WebApplication.Controllers
 
             if (employee == null)
             {
-                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
+                var message = string.Format(ErrorMessages.EmployeeNotFound, id);
 
-                return NotFound();
+                _logger.LogInfo(message);
+
+                return NotFound(message);
             }
 
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
