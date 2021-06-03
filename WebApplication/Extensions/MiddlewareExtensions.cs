@@ -7,7 +7,7 @@ using WebApplication.Models.Error;
 
 namespace WebApplication.Extensions
 {
-    public static class ExceptionMiddlewareExtensions
+    public static class MiddlewareExtensions
     {
         public static void ConfigureExceptionsHandler(this IApplicationBuilder app, ILoggerManager logger)
         {
@@ -30,6 +30,20 @@ namespace WebApplication.Extensions
                         }.ToString());
                     }
                 });
+            });
+        }
+
+        public static void ConfigureSwagger(this IApplicationBuilder app)
+        {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
             });
         }
     }

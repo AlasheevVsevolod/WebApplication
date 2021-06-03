@@ -31,6 +31,7 @@ namespace WebApplication
             services.ConfigureServices();
             services.ConfigureSqlContext(_configuration);
             services.ConfigureRepositoryManager();
+            services.ConfigureSwagger();
 
             services.AddControllers();
 
@@ -46,6 +47,7 @@ namespace WebApplication
             }
 
             app.ConfigureExceptionsHandler(logger);
+            app.ConfigureSwagger();
 
             app.UseCors("CorsPolicy");
 

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
 using WebApplication.Logger;
+using WebApplication.Models;
 using WebApplication.Services.Interface;
 
 namespace WebApplication.Controllers
@@ -23,6 +26,8 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<CompanyDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetCompanies()
         {
             var companiesDto = _companyService.GetAllCompanies(trackChanges: false);
@@ -31,6 +36,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet("{id}")]
+        [Produces(typeof(CompanyDto))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetCompanyById(Guid id)
         {
             var company = _companyService.GetCompanyById(id, trackChanges: false);
@@ -48,6 +56,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet("{companyId}/employees")]
+        [Produces(typeof(IEnumerable<EmployeeDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetEmployeesByCompanyId(Guid companyId)
         {
             var company = _companyService.GetCompanyById(companyId, trackChanges: false);
@@ -66,6 +77,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet("{companyId}/employees/{employeeId}")]
+        [Produces(typeof(IEnumerable<EmployeeDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetEmployeesByCompanyId(Guid companyId, Guid employeeId)
         {
             var company = _companyService.GetCompanyById(companyId, trackChanges: false);
