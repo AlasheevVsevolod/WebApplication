@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
+using WebApplication.Infrastructure.ModelBinders;
 using WebApplication.Logger;
 using WebApplication.Models;
 using WebApplication.Services.Interface;
@@ -61,7 +62,7 @@ namespace WebApplication.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetCompaniesByIds(IEnumerable<Guid> ids)
+        public IActionResult GetCompaniesByIds([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
         {
             if (!ids?.Any() ?? true)
             {
