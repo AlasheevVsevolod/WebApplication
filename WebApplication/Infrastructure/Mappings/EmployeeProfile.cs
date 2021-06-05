@@ -8,6 +8,7 @@ namespace WebApplication.Infrastructure.Mappings
         public EmployeeProfile()
         {
             CreateMap<Employee, EmployeeDto>();
+            CreateMap<EmployeeForCreationDto, Employee>();
         }
     }
 }

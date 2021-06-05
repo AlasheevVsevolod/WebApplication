@@ -10,6 +10,8 @@ namespace WebApplication.Infrastructure.Mappings
             CreateMap<Company, CompanyDto>()
                 .ForMember(c => c.FullAddress,
                     o => o.MapFrom(c => $"{c.Address}, {c.Country}"));
+
+            CreateMap<CompanyForCreationDto, Company>();
         }
     }
 }

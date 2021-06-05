@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,11 @@ namespace WebApplication.Repository.Concrete
         {
             return FindByCondition(c => c.Id.Equals(entityId), trackChanges)
                 .SingleOrDefault();
+        }
+
+        public IEnumerable<T> GetMultipleByIds(IEnumerable<Guid> ids, bool trackChanges)
+        {
+            return FindByCondition(c => ids.Contains(c.Id), trackChanges);
         }
     }
 }

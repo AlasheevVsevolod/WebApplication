@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
+using WebApplication.Infrastructure.ModelBinders;
 using WebApplication.Logger;
 using WebApplication.Models;
 using WebApplication.Services.Interface;
@@ -44,7 +46,7 @@ namespace WebApplication.Controllers
         /// <returns></returns>
         /// <response code="200">Returns found employee</response>
         /// <response code="404">If employee wasn't found</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetEmployeeById")]
         [Produces(typeof(EmployeeDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,6 +64,35 @@ namespace WebApplication.Controllers
             }
 
             return Ok(employee);
+        }
+
+        [HttpGet("({ids})", Name = "GetEmployeesByIds")]
+        [Produces(typeof(IEnumerable<EmployeeDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetEmployeesByIds([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
+        {
+            if (!ids?.Any() ?? true)
+            {
+                var message = string.Format(ErrorMessages.ParametersAreNullOrEmpty);
+
+                _logger.LogInfo(message);
+
+                return BadRequest(message);
+            }
+
+            var employees = _employeeService.GetEmployeesByIds(ids, trackChanges: false);
+            if (!employees?.Any() ?? true)
+            {
+                var message = string.Format(ErrorMessages.EmployeesNotFound, ids.Select(id => id.ToString()));
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            return Ok(employees);
         }
     }
 }

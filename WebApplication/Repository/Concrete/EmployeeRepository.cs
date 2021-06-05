@@ -36,5 +36,15 @@ namespace WebApplication.Repository.Concrete
             return FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId), trackChanges)
                 .SingleOrDefault();
         }
+
+        public void CreateEmployee(Employee employee)
+        {
+            Create(employee);
+        }
+
+        public IEnumerable<Employee> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges)
+        {
+            return GetMultipleByIds(employeeIds, trackChanges);
+        }
     }
 }

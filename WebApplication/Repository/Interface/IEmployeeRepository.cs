@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using WebApplication.Models;
 
@@ -10,5 +10,7 @@ namespace WebApplication.Repository.Interface
         IEnumerable<Employee> GetAllEmployeesForCompany(Guid companyId, bool trackChanges);
         Employee GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges);
         Employee GetEmployeeById(Guid employeeId, bool trackChanges);
+        IEnumerable<Employee> GetEmployeesByIds(IEnumerable<Guid> employeeId, bool trackChanges);
+        void CreateEmployee(Employee employee);
     }
 }

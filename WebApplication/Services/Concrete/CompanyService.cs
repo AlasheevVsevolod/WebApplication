@@ -35,5 +35,25 @@ namespace WebApplication.Services.Concrete
 
             return companyDto;
         }
+
+        public CompanyDto CreateCompany(CompanyForCreationDto company)
+        {
+            var companyEntity = _mapper.Map<Company>(company);
+            _repository.Company.CreateCompany(companyEntity);
+            _repository.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
+            return companyToReturn;
+        }
+
+        public IEnumerable<CompanyDto> GetCompaniesByIds(IEnumerable<Guid> companyIds, bool trackChanges)
+        {
+            var companies = _repository.Company.GetCompaniesByIds(companyIds, trackChanges);
+
+            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+
+            return companiesDto;
+        }
     }
 }
