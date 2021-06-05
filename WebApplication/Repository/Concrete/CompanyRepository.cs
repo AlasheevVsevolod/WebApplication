@@ -29,5 +29,10 @@ namespace WebApplication.Repository.Concrete
         {
             Create(company);
         }
+
+        public IEnumerable<Company> GetCompaniesByIds(IEnumerable<Guid> companyIds, bool trackChanges)
+        {
+            return GetMultipleByIds(companyIds, trackChanges);
+        }
     }
 }

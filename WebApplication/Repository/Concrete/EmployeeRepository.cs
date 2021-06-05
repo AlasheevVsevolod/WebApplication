@@ -41,5 +41,10 @@ namespace WebApplication.Repository.Concrete
         {
             Create(employee);
         }
+
+        public IEnumerable<Employee> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges)
+        {
+            return GetMultipleByIds(employeeIds, trackChanges);
+        }
     }
 }

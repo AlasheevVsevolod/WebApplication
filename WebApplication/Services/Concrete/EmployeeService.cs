@@ -66,5 +66,14 @@ namespace WebApplication.Services.Concrete
 
             return employeeToReturn;
         }
+
+        public IEnumerable<EmployeeDto> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges)
+        {
+            var employees = _repository.Employee.GetEmployeesByIds(employeeIds, trackChanges);
+
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+
+            return employeesDto;
+        }
     }
 }

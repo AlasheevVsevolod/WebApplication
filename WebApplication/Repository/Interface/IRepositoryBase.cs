@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -12,5 +13,6 @@ namespace WebApplication.Repository.Interface
         void Update(T entity);
         void Delete(T entity);
         T GetSingleById(Guid entityId, bool trackChanges);
+        IEnumerable<T> GetMultipleByIds(IEnumerable<Guid> ids, bool trackChanges);
     }
 }

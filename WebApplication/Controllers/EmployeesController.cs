@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
@@ -62,6 +63,35 @@ namespace WebApplication.Controllers
             }
 
             return Ok(employee);
+        }
+
+        [HttpGet("({ids})", Name = "GetEmployeesByIds")]
+        [Produces(typeof(IEnumerable<EmployeeDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetEmployeesByIds(IEnumerable<Guid> ids)
+        {
+            if (!ids?.Any() ?? true)
+            {
+                var message = string.Format(ErrorMessages.ParametersAreNullOrEmpty);
+
+                _logger.LogInfo(message);
+
+                return BadRequest(message);
+            }
+
+            var employees = _employeeService.GetEmployeesByIds(ids, trackChanges: false);
+            if (!employees?.Any() ?? true)
+            {
+                var message = string.Format(ErrorMessages.EmployeesNotFound, ids.Select(id => id.ToString()));
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            return Ok(employees);
         }
     }
 }

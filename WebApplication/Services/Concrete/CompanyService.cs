@@ -46,5 +46,14 @@ namespace WebApplication.Services.Concrete
 
             return companyToReturn;
         }
+
+        public IEnumerable<CompanyDto> GetCompaniesByIds(IEnumerable<Guid> companyIds, bool trackChanges)
+        {
+            var companies = _repository.Company.GetCompaniesByIds(companyIds, trackChanges);
+
+            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+
+            return companiesDto;
+        }
     }
 }

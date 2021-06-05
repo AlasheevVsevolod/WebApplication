@@ -10,6 +10,7 @@ namespace WebApplication.Services.Interface
         IEnumerable<EmployeeDto> GetAllEmployeesForCompany(Guid companyId, bool trackChanges);
         EmployeeDto GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges);
         EmployeeDto GetEmployeeById(Guid employeeId, bool trackChanges);
+        IEnumerable<EmployeeDto> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges);
         EmployeeDto CreateEmployee(EmployeeForCreationDto employee, Guid companyId);
     }
 }
