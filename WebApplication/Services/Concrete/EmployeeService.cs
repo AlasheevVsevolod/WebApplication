@@ -38,7 +38,7 @@ namespace WebApplication.Services.Concrete
 
         public EmployeeDto GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges)
         {
-            var employee = _repository.Employee.GetEmployeeForCompany(companyId, employeeId, trackChanges: false);
+            var employee = _repository.Employee.GetEmployeeForCompany(companyId, employeeId, trackChanges);
 
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
@@ -52,6 +52,19 @@ namespace WebApplication.Services.Concrete
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return employeesDto;
+        }
+
+        public EmployeeDto CreateEmployee(EmployeeForCreationDto employee, Guid companyId)
+        {
+            var employeeEntity = _mapper.Map<Employee>(employee);
+            employeeEntity.CompanyId = companyId;
+
+            _repository.Employee.CreateEmployee(employeeEntity);
+            _repository.Save();
+
+            var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
+
+            return employeeToReturn;
         }
     }
 }

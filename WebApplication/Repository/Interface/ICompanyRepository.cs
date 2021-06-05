@@ -8,5 +8,6 @@ namespace WebApplication.Repository.Interface
     {
         IEnumerable<Company> GetAllCompanies(bool trackChanges);
         Company GetCompanyById(Guid companyId, bool trackChanges);
+        void CreateCompany(Company company);
     }
 }

@@ -35,7 +35,7 @@ namespace WebApplication.Controllers
             return Ok(companiesDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetCompanyById")]
         [Produces(typeof(CompanyDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -76,7 +76,7 @@ namespace WebApplication.Controllers
             return Ok(employees);
         }
 
-        [HttpGet("{companyId}/employees/{employeeId}")]
+        [HttpGet("{companyId}/employees/{employeeId}", Name = "GetEmployeeByCompanyId")]
         [Produces(typeof(IEnumerable<EmployeeDto>))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -104,6 +104,54 @@ namespace WebApplication.Controllers
             }
 
             return Ok(employee);
+        }
+
+        [HttpPost]
+        [Produces(typeof(CompanyDto))]
+        public IActionResult CreateCompany(CompanyForCreationDto company)
+        {
+            if (company == null)
+            {
+                var message = ErrorMessages.CompanyIsNull;
+
+                _logger.LogError(message);
+
+                return BadRequest(message);
+            }
+
+            var createdCompany = _companyService.CreateCompany(company);
+
+            return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id },
+                createdCompany);
+        }
+
+        [HttpPost("{companyId}/employees")]
+        [Produces(typeof(EmployeeDto))]
+        public IActionResult CreateEmployee(Guid companyId, [FromBody]EmployeeForCreationDto employee)
+        {
+            if (employee == null)
+            {
+                var message = ErrorMessages.EmployeeIsNull;
+
+                _logger.LogError(message);
+
+                return BadRequest(message);
+            }
+
+            var company = _companyService.GetCompanyById(companyId, trackChanges: false);
+            if (company == null)
+            {
+                var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            var createdEmployee = _employeeService.CreateEmployee(employee, companyId);
+
+            return CreatedAtRoute("GetEmployeeByCompanyId", new { companyId, employeeId = createdEmployee.Id },
+                createdEmployee);
         }
     }
 }

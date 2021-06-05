@@ -24,5 +24,10 @@ namespace WebApplication.Repository.Concrete
         {
             return GetSingleById(companyId, trackChanges);
         }
+
+        public void CreateCompany(Company company)
+        {
+            Create(company);
+        }
     }
 }

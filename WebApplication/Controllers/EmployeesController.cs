@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +44,7 @@ namespace WebApplication.Controllers
         /// <returns></returns>
         /// <response code="200">Returns found employee</response>
         /// <response code="404">If employee wasn't found</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetEmployeeById")]
         [Produces(typeof(EmployeeDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
