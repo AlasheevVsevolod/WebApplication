@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebApplication.Infrastructure.Formatters;
 using WebApplication.Logger;
 using WebApplication.Repository.Concrete;
 using WebApplication.Repository.Interface;
@@ -62,6 +63,12 @@ namespace WebApplication.Extensions
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+        }
+
+        public static IMvcBuilder AddCustomCsvFormatter(this IMvcBuilder builder)
+        {
+            return builder.AddMvcOptions(config => config.OutputFormatters.Add(new
+                CsvOutputFormatter()));
         }
     }
 }

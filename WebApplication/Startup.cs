@@ -33,7 +33,13 @@ namespace WebApplication
             services.ConfigureRepositoryManager();
             services.ConfigureSwagger();
 
-            services.AddControllers();
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            })
+                .AddXmlSerializerFormatters()
+                .AddCustomCsvFormatter();
 
             services.AddAutoMapper(typeof(Startup));
         }
