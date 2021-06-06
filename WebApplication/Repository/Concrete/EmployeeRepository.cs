@@ -46,5 +46,10 @@ namespace WebApplication.Repository.Concrete
         {
             return GetMultipleByIds(employeeIds, trackChanges);
         }
+
+        public void DeleteEmployee(Employee employee)
+        {
+            Delete(employee);
+        }
     }
 }

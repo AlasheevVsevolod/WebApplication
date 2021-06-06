@@ -9,18 +9,20 @@ namespace WebApplication.Services.Concrete
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IRepositoryManager _repository;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
 
-        public EmployeeService(IRepositoryManager repository, IMapper mapper)
+        public EmployeeService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repository = repository;
+            _repositoryManager = repositoryManager;
+            _employeeRepository = _repositoryManager.Employee;
             _mapper = mapper;
         }
 
         public IEnumerable<EmployeeDto> GetAllEmployees(bool trackChanges)
         {
-            var employees = _repository.Employee.GetAllEmployees(trackChanges);
+            var employees = _employeeRepository.GetAllEmployees(trackChanges);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
@@ -29,7 +31,7 @@ namespace WebApplication.Services.Concrete
 
         public EmployeeDto GetEmployeeById(Guid employeeId, bool trackChanges)
         {
-            var employee = _repository.Employee.GetEmployeeById(employeeId, trackChanges);
+            var employee = _employeeRepository.GetEmployeeById(employeeId, trackChanges);
 
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
@@ -38,7 +40,7 @@ namespace WebApplication.Services.Concrete
 
         public EmployeeDto GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges)
         {
-            var employee = _repository.Employee.GetEmployeeForCompany(companyId, employeeId, trackChanges);
+            var employee = _employeeRepository.GetEmployeeForCompany(companyId, employeeId, trackChanges);
 
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
@@ -47,7 +49,7 @@ namespace WebApplication.Services.Concrete
 
         public IEnumerable<EmployeeDto> GetAllEmployeesForCompany(Guid companyId, bool trackChanges)
         {
-            var employees = _repository.Employee.GetAllEmployeesForCompany(companyId, trackChanges);
+            var employees = _employeeRepository.GetAllEmployeesForCompany(companyId, trackChanges);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
@@ -59,8 +61,8 @@ namespace WebApplication.Services.Concrete
             var employeeEntity = _mapper.Map<Employee>(employee);
             employeeEntity.CompanyId = companyId;
 
-            _repository.Employee.CreateEmployee(employeeEntity);
-            _repository.Save();
+            _employeeRepository.CreateEmployee(employeeEntity);
+            _repositoryManager.Save();
 
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
 
@@ -69,11 +71,23 @@ namespace WebApplication.Services.Concrete
 
         public IEnumerable<EmployeeDto> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges)
         {
-            var employees = _repository.Employee.GetEmployeesByIds(employeeIds, trackChanges);
+            var employees = _employeeRepository.GetEmployeesByIds(employeeIds, trackChanges);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return employeesDto;
+        }
+
+        public void DeleteEmployee(Guid employeeId)
+        {
+            var existingEmployee = _employeeRepository.GetEmployeeById(employeeId, trackChanges: false);
+            if (existingEmployee == null)
+            {
+                return;
+            }
+
+            _employeeRepository.DeleteEmployee(existingEmployee);
+            _repositoryManager.Save();
         }
     }
 }

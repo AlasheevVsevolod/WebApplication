@@ -236,5 +236,13 @@ namespace WebApplication.Controllers
             return CreatedAtRoute("GetEmployeesByIds", new { ids = newEmployeeIds },
                 createdEmployees);
         }
+
+        [HttpDelete("{companyId}")]
+        public IActionResult DeleteCompany(Guid companyId)
+        {
+            _companyService.DeleteCompany(companyId);
+
+            return NoContent();
+        }
     }
 }

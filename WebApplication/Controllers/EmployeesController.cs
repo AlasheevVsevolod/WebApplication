@@ -94,5 +94,13 @@ namespace WebApplication.Controllers
 
             return Ok(employees);
         }
+
+        [HttpDelete("{employeeId}")]
+        public IActionResult DeleteEmployee(Guid employeeId)
+        {
+            _employeeService.DeleteEmployee(employeeId);
+
+            return NoContent();
+        }
     }
 }

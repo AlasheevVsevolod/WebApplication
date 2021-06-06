@@ -34,5 +34,10 @@ namespace WebApplication.Repository.Concrete
         {
             return GetMultipleByIds(companyIds, trackChanges);
         }
+
+        public void DeleteCompany(Company company)
+        {
+            Delete(company);
+        }
     }
 }
