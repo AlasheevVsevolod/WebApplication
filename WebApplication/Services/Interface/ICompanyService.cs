@@ -10,5 +10,6 @@ namespace WebApplication.Services.Interface
         CompanyDto GetCompanyById(Guid companyId, bool trackChanges);
         IEnumerable<CompanyDto> GetCompaniesByIds(IEnumerable<Guid> companyIds, bool trackChanges);
         CompanyDto CreateCompany(CompanyForCreationDto company);
+        void DeleteCompany(Guid companyId);
     }
 }

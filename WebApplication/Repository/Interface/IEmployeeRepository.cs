@@ -12,5 +12,6 @@ namespace WebApplication.Repository.Interface
         Employee GetEmployeeById(Guid employeeId, bool trackChanges);
         IEnumerable<Employee> GetEmployeesByIds(IEnumerable<Guid> employeeId, bool trackChanges);
         void CreateEmployee(Employee employee);
+        void DeleteEmployee(Employee employee);
     }
 }

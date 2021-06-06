@@ -10,5 +10,6 @@ namespace WebApplication.Repository.Interface
         Company GetCompanyById(Guid companyId, bool trackChanges);
         IEnumerable<Company> GetCompaniesByIds(IEnumerable<Guid> companyIds, bool trackChanges);
         void CreateCompany(Company company);
+        void DeleteCompany(Company company);
     }
 }
