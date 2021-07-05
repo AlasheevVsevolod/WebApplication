@@ -69,5 +69,13 @@ namespace WebApplication.Services.Concrete
             _companyRepository.DeleteCompany(existingCompany);
             _repositoryManager.Save();
         }
+
+        public void UpdateCompany(CompanyForUpdateDto company, Guid companyId)
+        {
+            var existingCompany = _companyRepository.GetCompanyById(companyId, trackChanges: true);
+            _mapper.Map(company, existingCompany);
+
+            _repositoryManager.Save();
+        }
     }
 }
