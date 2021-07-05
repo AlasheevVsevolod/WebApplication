@@ -9,6 +9,7 @@ namespace WebApplication.Infrastructure.Mappings
         {
             CreateMap<Employee, EmployeeDto>();
             CreateMap<EmployeeForCreationDto, Employee>();
+            CreateMap<EmployeeForUpdateDto, Employee>();
         }
     }
 }
