@@ -285,6 +285,15 @@ namespace WebApplication.Controllers
         [HttpPut("{companyId}")]
         public IActionResult UpdateCompany(Guid companyId, [FromBody]CompanyForUpdateDto company)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (company == null)
             {
                 var message = ErrorMessages.CompanyIsNull;

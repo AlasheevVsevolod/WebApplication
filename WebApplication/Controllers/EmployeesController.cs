@@ -107,6 +107,15 @@ namespace WebApplication.Controllers
         [HttpPut("{employeeId}")]
         public IActionResult UpdateEmployeeForCompany(Guid employeeId, [FromBody] EmployeeForUpdateDto employee)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (employee == null)
             {
                 var message = ErrorMessages.EmployeeIsNull;
