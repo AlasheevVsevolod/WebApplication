@@ -12,6 +12,7 @@ namespace WebApplication.Infrastructure.Mappings
                     o => o.MapFrom(c => $"{c.Address}, {c.Country}"));
 
             CreateMap<CompanyForCreationDto, Company>();
+            CreateMap<CompanyForUpdateDto, Company>();
         }
     }
 }

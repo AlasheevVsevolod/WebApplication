@@ -89,5 +89,13 @@ namespace WebApplication.Services.Concrete
             _employeeRepository.DeleteEmployee(existingEmployee);
             _repositoryManager.Save();
         }
+
+        public void UpdateEmployee(EmployeeForUpdateDto employee, Guid employeeId)
+        {
+            var existingEmployee = _employeeRepository.GetEmployeeById(employeeId, trackChanges: true);
+            _mapper.Map(employee, existingEmployee);
+
+            _repositoryManager.Save();
+        }
     }
 }

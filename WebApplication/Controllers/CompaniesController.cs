@@ -244,5 +244,31 @@ namespace WebApplication.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{companyId}")]
+        public IActionResult UpdateCompany(Guid companyId, [FromBody]CompanyForUpdateDto company)
+        {
+            if (company == null)
+            {
+                var message = ErrorMessages.CompanyIsNull;
+
+                _logger.LogError(message);
+
+                return BadRequest(message);
+            }
+
+            var companyEntity = _companyService.GetCompanyById(companyId, trackChanges: false);
+            if (companyEntity == null)
+            {
+                var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            _companyService.UpdateCompany(company, companyId);
+            return NoContent();
+        }
     }
 }

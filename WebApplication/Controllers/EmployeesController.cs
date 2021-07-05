@@ -17,11 +17,13 @@ namespace WebApplication.Controllers
     {
         private readonly ILoggerManager _logger;
         private readonly IEmployeeService _employeeService;
+        private readonly ICompanyService _companyService;
 
-        public EmployeesController(ILoggerManager logger, IEmployeeService employeeService)
+        public EmployeesController(ILoggerManager logger, IEmployeeService employeeService, ICompanyService companyService)
         {
             _logger = logger;
             _employeeService = employeeService;
+            _companyService = companyService;
         }
 
         /// <summary>
@@ -99,6 +101,33 @@ namespace WebApplication.Controllers
         public IActionResult DeleteEmployee(Guid employeeId)
         {
             _employeeService.DeleteEmployee(employeeId);
+
+            return NoContent();
+        }
+
+        [HttpPut("{employeeId}")]
+        public IActionResult UpdateEmployeeForCompany(Guid employeeId, [FromBody] EmployeeForUpdateDto employee)
+        {
+            if (employee == null)
+            {
+                var message = string.Format(ErrorMessages.EmployeeIsNull);
+
+                _logger.LogInfo(message);
+
+                return BadRequest(message);
+            }
+
+            var employeeEntity = _employeeService.GetEmployeeById(employeeId, trackChanges: false);
+            if (employeeEntity == null)
+            {
+                var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            _employeeService.UpdateEmployee(employee, employeeId);
 
             return NoContent();
         }
