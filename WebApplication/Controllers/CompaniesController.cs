@@ -187,6 +187,15 @@ namespace WebApplication.Controllers
         [Produces(typeof(EmployeeDto))]
         public IActionResult CreateEmployee(Guid companyId, [FromBody]EmployeeForCreationDto employee)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (employee == null)
             {
                 var message = ErrorMessages.EmployeeIsNull;
