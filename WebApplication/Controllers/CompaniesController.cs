@@ -142,6 +142,15 @@ namespace WebApplication.Controllers
         [Produces(typeof(CompanyDto))]
         public IActionResult CreateCompany([FromBody]CompanyForCreationDto company)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (company == null)
             {
                 var message = ErrorMessages.CompanyIsNull;
@@ -161,6 +170,15 @@ namespace WebApplication.Controllers
         [Produces(typeof(IEnumerable<CompanyDto>))]
         public IActionResult CreateCompanies([FromBody]IEnumerable<CompanyForCreationDto> companies)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (!companies?.Any() ?? true)
             {
                 var message = string.Format(ErrorMessages.ParametersAreNullOrEmpty);
@@ -187,6 +205,15 @@ namespace WebApplication.Controllers
         [Produces(typeof(EmployeeDto))]
         public IActionResult CreateEmployee(Guid companyId, [FromBody]EmployeeForCreationDto employee)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (employee == null)
             {
                 var message = ErrorMessages.EmployeeIsNull;
@@ -216,6 +243,15 @@ namespace WebApplication.Controllers
         [Produces(typeof(IEnumerable<EmployeeDto>))]
         public IActionResult CreateEmployees(Guid companyId, [FromBody]IEnumerable<EmployeeForCreationDto> employees)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (!employees?.Any() ?? true)
             {
                 var message = string.Format(ErrorMessages.ParametersAreNullOrEmpty);
@@ -249,6 +285,15 @@ namespace WebApplication.Controllers
         [HttpPut("{companyId}")]
         public IActionResult UpdateCompany(Guid companyId, [FromBody]CompanyForUpdateDto company)
         {
+            if (!ModelState.IsValid)
+            {
+                var message = ErrorMessages.InvalidModelState;
+
+                _logger.LogError(message);
+
+                return UnprocessableEntity(ModelState);
+            }
+
             if (company == null)
             {
                 var message = ErrorMessages.CompanyIsNull;

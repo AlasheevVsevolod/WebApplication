@@ -11,5 +11,6 @@
         public const string EmployeesNotFound = "None of the employees with the specified ids were found. Ids are: {0}";
         public const string ParametersAreNullOrEmpty = "Specified collection of parameters is null or empty";
         public const string PatchDocIsNull = "Patch document is null";
+        public const string InvalidModelState = "Invalid model state for the object";
     }
 }
