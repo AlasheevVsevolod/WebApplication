@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.JsonPatch;
 using WebApplication.Models;
 
 namespace WebApplication.Services.Interface
@@ -14,5 +15,6 @@ namespace WebApplication.Services.Interface
         EmployeeDto CreateEmployee(EmployeeForCreationDto employee, Guid companyId);
         void DeleteEmployee(Guid employeeId);
         void UpdateEmployee(EmployeeForUpdateDto employee, Guid employeeId);
+        void PatchEmployee(Guid employeeId, JsonPatchDocument<EmployeeForUpdateDto> patchDoc);
     }
 }

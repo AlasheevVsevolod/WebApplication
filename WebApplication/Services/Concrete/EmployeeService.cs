@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using WebApplication.Models;
 using WebApplication.Repository.Interface;
 using WebApplication.Services.Interface;
@@ -94,6 +95,18 @@ namespace WebApplication.Services.Concrete
         {
             var existingEmployee = _employeeRepository.GetEmployeeById(employeeId, trackChanges: true);
             _mapper.Map(employee, existingEmployee);
+
+            _repositoryManager.Save();
+        }
+
+        public void PatchEmployee(Guid employeeId, JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        {
+            var employee = _employeeRepository.GetEmployeeById(employeeId, trackChanges: true);
+            var employeeToPatch = _mapper.Map<EmployeeForUpdateDto>(employee);
+
+            patchDoc.ApplyTo(employeeToPatch);
+
+            _mapper.Map(employeeToPatch, employee);
 
             _repositoryManager.Save();
         }
