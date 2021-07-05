@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
 using WebApplication.Infrastructure.ModelBinders;
@@ -17,13 +18,11 @@ namespace WebApplication.Controllers
     {
         private readonly ILoggerManager _logger;
         private readonly IEmployeeService _employeeService;
-        private readonly ICompanyService _companyService;
 
-        public EmployeesController(ILoggerManager logger, IEmployeeService employeeService, ICompanyService companyService)
+        public EmployeesController(ILoggerManager logger, IEmployeeService employeeService)
         {
             _logger = logger;
             _employeeService = employeeService;
-            _companyService = companyService;
         }
 
         /// <summary>
@@ -110,7 +109,7 @@ namespace WebApplication.Controllers
         {
             if (employee == null)
             {
-                var message = string.Format(ErrorMessages.EmployeeIsNull);
+                var message = ErrorMessages.EmployeeIsNull;
 
                 _logger.LogInfo(message);
 
@@ -128,6 +127,33 @@ namespace WebApplication.Controllers
             }
 
             _employeeService.UpdateEmployee(employee, employeeId);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{employeeId}")]
+        public IActionResult PartiallyUpdateEmployeeForCompany(Guid employeeId, [FromBody]JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                var message = ErrorMessages.PatchDocIsNull;
+
+                _logger.LogInfo(message);
+
+                return BadRequest(message);
+            }
+
+            var employeeEntity = _employeeService.GetEmployeeById(employeeId, trackChanges: false);
+            if (employeeEntity == null)
+            {
+                var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            _employeeService.PatchEmployee(employeeId, patchDoc);
 
             return NoContent();
         }

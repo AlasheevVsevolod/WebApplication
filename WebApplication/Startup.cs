@@ -38,6 +38,7 @@ namespace WebApplication
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
             })
+                .AddNewtonsoftJson()
                 .AddXmlSerializerFormatters()
                 .AddCustomCsvFormatter();
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Infrastructure.Messages;
 using WebApplication.Infrastructure.ModelBinders;
@@ -268,6 +269,33 @@ namespace WebApplication.Controllers
             }
 
             _companyService.UpdateCompany(company, companyId);
+            return NoContent();
+        }
+
+        [HttpPatch("{companyId}")]
+        public IActionResult PartiallyUpdateCompany(Guid companyId, [FromBody]JsonPatchDocument<CompanyForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                var message = ErrorMessages.PatchDocIsNull;
+
+                _logger.LogInfo(message);
+
+                return BadRequest(message);
+            }
+
+            var companyEntity = _companyService.GetCompanyById(companyId, trackChanges: false);
+            if (companyEntity == null)
+            {
+                var message = string.Format(ErrorMessages.CompaniesNotFound, companyId);
+
+                _logger.LogInfo(message);
+
+                return NotFound(message);
+            }
+
+            _companyService.PatchCompany(companyId, patchDoc);
+
             return NoContent();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using WebApplication.Models;
 using WebApplication.Repository.Interface;
 using WebApplication.Services.Interface;
@@ -74,6 +75,18 @@ namespace WebApplication.Services.Concrete
         {
             var existingCompany = _companyRepository.GetCompanyById(companyId, trackChanges: true);
             _mapper.Map(company, existingCompany);
+
+            _repositoryManager.Save();
+        }
+
+        public void PatchCompany(Guid companyId, JsonPatchDocument<CompanyForUpdateDto> patchDoc)
+        {
+            var company = _companyRepository.GetCompanyById(companyId, trackChanges: true);
+            var companyToPatch = _mapper.Map<CompanyForUpdateDto>(company);
+
+            patchDoc.ApplyTo(companyToPatch);
+
+            _mapper.Map(companyToPatch, company);
 
             _repositoryManager.Save();
         }
