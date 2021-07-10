@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using WebApplication.Models;
 
@@ -7,14 +8,14 @@ namespace WebApplication.Services.Interface
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeDto> GetAllEmployees(bool trackChanges);
-        IEnumerable<EmployeeDto> GetAllEmployeesForCompany(Guid companyId, bool trackChanges);
-        EmployeeDto GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges);
-        EmployeeDto GetEmployeeById(Guid employeeId, bool trackChanges);
-        IEnumerable<EmployeeDto> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges);
-        EmployeeDto CreateEmployee(EmployeeForCreationDto employee, Guid companyId);
-        void DeleteEmployee(Guid employeeId);
-        void UpdateEmployee(EmployeeForUpdateDto employee, Guid employeeId);
-        void PatchEmployee(Guid employeeId, JsonPatchDocument<EmployeeForUpdateDto> patchDoc);
+        Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync(bool trackChanges);
+        Task<IEnumerable<EmployeeDto>> GetAllEmployeesForCompanyAsync(Guid companyId, bool trackChanges);
+        Task<EmployeeDto> GetEmployeeForCompanyAsync(Guid companyId, Guid employeeId, bool trackChanges);
+        Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId, bool trackChanges);
+        Task<IEnumerable<EmployeeDto>> GetEmployeesByIdsAsync(IEnumerable<Guid> employeeIds, bool trackChanges);
+        Task<EmployeeDto> CreateEmployeeAsync(EmployeeForCreationDto employee, Guid companyId);
+        Task DeleteEmployeeAsync(Guid employeeId);
+        Task UpdateEmployeeAsync(EmployeeForUpdateDto employee, Guid employeeId);
+        Task PatchEmployeeAsync(Guid employeeId, JsonPatchDocument<EmployeeForUpdateDto> patchDoc);
     }
 }

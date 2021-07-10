@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebApplication.Models;
 using WebApplication.Repository.Interface;
@@ -35,15 +36,16 @@ namespace WebApplication.Repository.Concrete
         public void Update(T entity) => _repositoryContext.Set<T>().Update(entity);
         public void Delete(T entity) => _repositoryContext.Set<T>().Remove(entity);
 
-        public T GetSingleById(Guid entityId, bool trackChanges)
+        public async Task<T> GetSingleById(Guid entityId, bool trackChanges)
         {
-            return FindByCondition(c => c.Id.Equals(entityId), trackChanges)
-                .SingleOrDefault();
+            return await FindByCondition(c => c.Id.Equals(entityId), trackChanges)
+                .SingleOrDefaultAsync();
         }
 
-        public IEnumerable<T> GetMultipleByIds(IEnumerable<Guid> ids, bool trackChanges)
+        public async Task<IEnumerable<T>> GetMultipleByIds(IEnumerable<Guid> ids, bool trackChanges)
         {
-            return FindByCondition(c => ids.Contains(c.Id), trackChanges);
+            return await FindByCondition(c => ids.Contains(c.Id), trackChanges)
+                .ToListAsync();
         }
     }
 }

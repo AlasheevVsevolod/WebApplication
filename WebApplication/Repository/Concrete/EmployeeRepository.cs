@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebApplication.Models;
 using WebApplication.Repository.Interface;
 
@@ -13,28 +15,29 @@ namespace WebApplication.Repository.Concrete
         {
         }
 
-        public IEnumerable<Employee> GetAllEmployees(bool trackChanges)
+        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync(bool trackChanges)
         {
-            return FindAll(trackChanges)
+            return await FindAll(trackChanges)
                 .OrderBy(e => e.Name)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Employee GetEmployeeById(Guid employeeId, bool trackChanges)
+        public async Task<Employee> GetEmployeeByIdAsync(Guid employeeId, bool trackChanges)
         {
-            return GetSingleById(employeeId, trackChanges);
+            return await GetSingleById(employeeId, trackChanges);
         }
 
-        public IEnumerable<Employee> GetAllEmployeesForCompany(Guid companyId, bool trackChanges)
+        public async Task<IEnumerable<Employee>> GetAllEmployeesForCompanyAsync(Guid companyId, bool trackChanges)
         {
-            return FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
-                .OrderBy(e => e.Name);
+            return await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
         }
 
-        public Employee GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges)
+        public async Task<Employee> GetEmployeeForCompanyAsync(Guid companyId, Guid employeeId, bool trackChanges)
         {
-            return FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId), trackChanges)
-                .SingleOrDefault();
+            return await FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(employeeId), trackChanges)
+                .SingleOrDefaultAsync();
         }
 
         public void CreateEmployee(Employee employee)
@@ -42,9 +45,9 @@ namespace WebApplication.Repository.Concrete
             Create(employee);
         }
 
-        public IEnumerable<Employee> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges)
+        public async Task<IEnumerable<Employee>> GetEmployeesByIdsAsync(IEnumerable<Guid> employeeIds, bool trackChanges)
         {
-            return GetMultipleByIds(employeeIds, trackChanges);
+            return await GetMultipleByIds(employeeIds, trackChanges);
         }
 
         public void DeleteEmployee(Employee employee)

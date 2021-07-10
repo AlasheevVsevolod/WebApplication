@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using WebApplication.Models;
@@ -21,74 +22,74 @@ namespace WebApplication.Services.Concrete
             _mapper = mapper;
         }
 
-        public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
+        public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
         {
-            var companies = _companyRepository.GetAllCompanies(trackChanges);
+            var companies = await _companyRepository.GetAllCompaniesAsync(trackChanges);
 
             var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
 
             return companiesDto;
         }
 
-        public CompanyDto GetCompanyById(Guid companyId, bool trackChanges)
+        public async Task<CompanyDto> GetCompanyByIdAsync(Guid companyId, bool trackChanges)
         {
-            var company = _companyRepository.GetCompanyById(companyId, trackChanges);
+            var company = await _companyRepository.GetCompanyByIdAsync(companyId, trackChanges);
 
             var companyDto = _mapper.Map<CompanyDto>(company);
 
             return companyDto;
         }
 
-        public CompanyDto CreateCompany(CompanyForCreationDto company)
+        public async Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company)
         {
             var companyEntity = _mapper.Map<Company>(company);
             _companyRepository.CreateCompany(companyEntity);
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
 
             var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
 
             return companyToReturn;
         }
 
-        public IEnumerable<CompanyDto> GetCompaniesByIds(IEnumerable<Guid> companyIds, bool trackChanges)
+        public async Task<IEnumerable<CompanyDto>> GetCompaniesByIdsAsync(IEnumerable<Guid> companyIds, bool trackChanges)
         {
-            var companies = _companyRepository.GetCompaniesByIds(companyIds, trackChanges);
+            var companies = await _companyRepository.GetCompaniesByIdsAsync(companyIds, trackChanges);
 
             var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
 
             return companiesDto;
         }
 
-        public void DeleteCompany(Guid companyId)
+        public async Task DeleteCompanyAsync(Guid companyId)
         {
-            var existingCompany = _companyRepository.GetCompanyById(companyId, trackChanges: false);
+            var existingCompany = await _companyRepository.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (existingCompany == null)
             {
                 return;
             }
 
             _companyRepository.DeleteCompany(existingCompany);
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
         }
 
-        public void UpdateCompany(CompanyForUpdateDto company, Guid companyId)
+        public async Task UpdateCompanyAsync(CompanyForUpdateDto company, Guid companyId)
         {
-            var existingCompany = _companyRepository.GetCompanyById(companyId, trackChanges: true);
+            var existingCompany = await _companyRepository.GetCompanyByIdAsync(companyId, trackChanges: true);
             _mapper.Map(company, existingCompany);
 
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
         }
 
-        public void PatchCompany(Guid companyId, JsonPatchDocument<CompanyForUpdateDto> patchDoc)
+        public async Task PatchCompanyAsync(Guid companyId, JsonPatchDocument<CompanyForUpdateDto> patchDoc)
         {
-            var company = _companyRepository.GetCompanyById(companyId, trackChanges: true);
+            var company = await _companyRepository.GetCompanyByIdAsync(companyId, trackChanges: true);
             var companyToPatch = _mapper.Map<CompanyForUpdateDto>(company);
 
             patchDoc.ApplyTo(companyToPatch);
 
             _mapper.Map(companyToPatch, company);
 
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
         }
     }
 }

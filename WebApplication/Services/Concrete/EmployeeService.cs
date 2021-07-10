@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using WebApplication.Models;
@@ -21,94 +22,94 @@ namespace WebApplication.Services.Concrete
             _mapper = mapper;
         }
 
-        public IEnumerable<EmployeeDto> GetAllEmployees(bool trackChanges)
+        public async Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync(bool trackChanges)
         {
-            var employees = _employeeRepository.GetAllEmployees(trackChanges);
+            var employees = await _employeeRepository.GetAllEmployeesAsync(trackChanges);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return employeesDto;
         }
 
-        public EmployeeDto GetEmployeeById(Guid employeeId, bool trackChanges)
+        public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId, bool trackChanges)
         {
-            var employee = _employeeRepository.GetEmployeeById(employeeId, trackChanges);
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, trackChanges);
 
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
             return employeeDto;
         }
 
-        public EmployeeDto GetEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges)
+        public async Task<EmployeeDto> GetEmployeeForCompanyAsync(Guid companyId, Guid employeeId, bool trackChanges)
         {
-            var employee = _employeeRepository.GetEmployeeForCompany(companyId, employeeId, trackChanges);
+            var employee = await _employeeRepository.GetEmployeeForCompanyAsync(companyId, employeeId, trackChanges);
 
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
             return employeeDto;
         }
 
-        public IEnumerable<EmployeeDto> GetAllEmployeesForCompany(Guid companyId, bool trackChanges)
+        public async Task<IEnumerable<EmployeeDto>> GetAllEmployeesForCompanyAsync(Guid companyId, bool trackChanges)
         {
-            var employees = _employeeRepository.GetAllEmployeesForCompany(companyId, trackChanges);
+            var employees = await _employeeRepository.GetAllEmployeesForCompanyAsync(companyId, trackChanges);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return employeesDto;
         }
 
-        public EmployeeDto CreateEmployee(EmployeeForCreationDto employee, Guid companyId)
+        public async Task<EmployeeDto> CreateEmployeeAsync(EmployeeForCreationDto employee, Guid companyId)
         {
             var employeeEntity = _mapper.Map<Employee>(employee);
             employeeEntity.CompanyId = companyId;
 
             _employeeRepository.CreateEmployee(employeeEntity);
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
 
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
 
             return employeeToReturn;
         }
 
-        public IEnumerable<EmployeeDto> GetEmployeesByIds(IEnumerable<Guid> employeeIds, bool trackChanges)
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesByIdsAsync(IEnumerable<Guid> employeeIds, bool trackChanges)
         {
-            var employees = _employeeRepository.GetEmployeesByIds(employeeIds, trackChanges);
+            var employees = await _employeeRepository.GetEmployeesByIdsAsync(employeeIds, trackChanges);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return employeesDto;
         }
 
-        public void DeleteEmployee(Guid employeeId)
+        public async Task DeleteEmployeeAsync(Guid employeeId)
         {
-            var existingEmployee = _employeeRepository.GetEmployeeById(employeeId, trackChanges: false);
+            var existingEmployee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, trackChanges: false);
             if (existingEmployee == null)
             {
                 return;
             }
 
             _employeeRepository.DeleteEmployee(existingEmployee);
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
         }
 
-        public void UpdateEmployee(EmployeeForUpdateDto employee, Guid employeeId)
+        public async Task UpdateEmployeeAsync(EmployeeForUpdateDto employee, Guid employeeId)
         {
-            var existingEmployee = _employeeRepository.GetEmployeeById(employeeId, trackChanges: true);
+            var existingEmployee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, trackChanges: true);
             _mapper.Map(employee, existingEmployee);
 
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
         }
 
-        public void PatchEmployee(Guid employeeId, JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        public async Task PatchEmployeeAsync(Guid employeeId, JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
         {
-            var employee = _employeeRepository.GetEmployeeById(employeeId, trackChanges: true);
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, trackChanges: true);
             var employeeToPatch = _mapper.Map<EmployeeForUpdateDto>(employee);
 
             patchDoc.ApplyTo(employeeToPatch);
 
             _mapper.Map(employeeToPatch, employee);
 
-            _repositoryManager.Save();
+            await _repositoryManager.Save();
         }
     }
 }
