@@ -12,7 +12,7 @@ namespace WebApplication.Services.Interface
         Task<IEnumerable<EmployeeDto>> GetAllEmployeesForCompanyAsync(Guid companyId, bool trackChanges);
         Task<EmployeeDto> GetEmployeeForCompanyAsync(Guid companyId, Guid employeeId, bool trackChanges);
         Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId, bool trackChanges);
-        Task<EmployeeDto> GetEmployeeByIdAsync(Employee existingEmployee, bool trackChanges);
+        EmployeeDto GetEmployeeById(Employee existingEmployee);
         Task<IEnumerable<EmployeeDto>> GetEmployeesByIdsAsync(IEnumerable<Guid> employeeIds, bool trackChanges);
         Task<EmployeeDto> CreateEmployeeAsync(EmployeeForCreationDto employee, Guid companyId);
         Task DeleteEmployeeAsync(Employee existingEmployee);

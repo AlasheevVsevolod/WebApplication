@@ -54,11 +54,11 @@ namespace WebApplication.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ServiceFilter(typeof(ValidateEmployeeExistsAttribute))]
-        public async Task<IActionResult> GetEmployeeById(Guid employeeId)
+        public IActionResult GetEmployeeById(Guid employeeId)
         {
             var existingEmployee = HttpContext.Items["employee"] as Employee;
 
-            var employee = await _employeeService.GetEmployeeByIdAsync(existingEmployee, trackChanges: false);
+            var employee = _employeeService.GetEmployeeById(existingEmployee);
 
             return Ok(employee);
         }

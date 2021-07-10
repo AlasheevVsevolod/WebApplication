@@ -48,7 +48,9 @@ namespace WebApplication.Controllers
         [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public IActionResult GetCompanyById(Guid companyId)
         {
-            var company = HttpContext.Items["company"] as Company;
+            var existingCompany = HttpContext.Items["company"] as Company;
+
+            var company = _companyService.GetCompanyById(existingCompany);
 
             return Ok(company);
         }

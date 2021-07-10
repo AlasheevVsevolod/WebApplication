@@ -10,6 +10,7 @@ namespace WebApplication.Services.Interface
     {
         Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges);
         Task<CompanyDto> GetCompanyByIdAsync(Guid companyId, bool trackChanges);
+        CompanyDto GetCompanyById(Company existingCompany);
         Task<IEnumerable<CompanyDto>> GetCompaniesByIdsAsync(IEnumerable<Guid> companyIds, bool trackChanges);
         Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company);
         Task DeleteCompanyAsync(Company existingCompany);

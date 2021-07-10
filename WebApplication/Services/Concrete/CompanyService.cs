@@ -40,6 +40,13 @@ namespace WebApplication.Services.Concrete
             return companyDto;
         }
 
+        public CompanyDto GetCompanyById(Company existingCompany)
+        {
+            var companyDto = _mapper.Map<CompanyDto>(existingCompany);
+
+            return companyDto;
+        }
+
         public async Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company)
         {
             var companyEntity = _mapper.Map<Company>(company);

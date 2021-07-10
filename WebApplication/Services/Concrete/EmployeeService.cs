@@ -40,7 +40,7 @@ namespace WebApplication.Services.Concrete
             return employeeDto;
         }
 
-        public async Task<EmployeeDto> GetEmployeeByIdAsync(Employee existingEmployee, bool trackChanges)
+        public EmployeeDto GetEmployeeById(Employee existingEmployee)
         {
             var employeeDto = _mapper.Map<EmployeeDto>(existingEmployee);
 
