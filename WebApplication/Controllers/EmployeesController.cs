@@ -53,18 +53,12 @@ namespace WebApplication.Controllers
         [Produces(typeof(EmployeeDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ServiceFilter(typeof(ValidateEmployeeExistsAttribute))]
         public async Task<IActionResult> GetEmployeeById(Guid employeeId)
         {
-            var employee = await _employeeService.GetEmployeeByIdAsync(employeeId, trackChanges: false);
+            var existingEmployee = HttpContext.Items["employee"] as Employee;
 
-            if (employee == null)
-            {
-                var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
-
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
+            var employee = await _employeeService.GetEmployeeByIdAsync(existingEmployee, trackChanges: false);
 
             return Ok(employee);
         }
@@ -99,33 +93,30 @@ namespace WebApplication.Controllers
         }
 
         [HttpDelete("{employeeId}")]
+        [ServiceFilter(typeof(ValidateEmployeeExistsAttribute))]
         public async Task<IActionResult> DeleteEmployee(Guid employeeId)
         {
-            await _employeeService.DeleteEmployeeAsync(employeeId);
+            var existingEmployee = HttpContext.Items["employee"] as Employee;
+
+            await _employeeService.DeleteEmployeeAsync(existingEmployee);
 
             return NoContent();
         }
 
         [HttpPut("{employeeId}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateEmployeeExistsAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany(Guid employeeId, [FromBody] EmployeeForUpdateDto employee)
         {
-            var employeeEntity = await _employeeService.GetEmployeeByIdAsync(employeeId, trackChanges: false);
-            if (employeeEntity == null)
-            {
-                var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
+            var existingEmployee = HttpContext.Items["employee"] as Employee;
 
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
-            await _employeeService.UpdateEmployeeAsync(employee, employeeId);
+            await _employeeService.UpdateEmployeeAsync(employee, existingEmployee);
 
             return NoContent();
         }
 
         [HttpPatch("{employeeId}")]
+        [ServiceFilter(typeof(ValidateEmployeeExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid employeeId, [FromBody]JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -137,17 +128,9 @@ namespace WebApplication.Controllers
                 return BadRequest(message);
             }
 
-            var employeeEntity = await _employeeService.GetEmployeeByIdAsync(employeeId, trackChanges: false);
-            if (employeeEntity == null)
-            {
-                var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
+            var existingEmployee = HttpContext.Items["employee"] as Employee;
 
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
-            await _employeeService.PatchEmployeeAsync(employeeId, patchDoc);
+            await _employeeService.PatchEmployeeAsync(existingEmployee, patchDoc);
 
             return NoContent();
         }
