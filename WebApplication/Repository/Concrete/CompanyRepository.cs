@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebApplication.Models;
 using WebApplication.Repository.Interface;
 
@@ -13,16 +15,16 @@ namespace WebApplication.Repository.Concrete
         {
         }
 
-        public IEnumerable<Company> GetAllCompanies(bool trackChanges)
+        public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges)
         {
-            return FindAll(trackChanges)
+            return await FindAll(trackChanges)
                 .OrderBy(c => c.Name)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Company GetCompanyById(Guid companyId, bool trackChanges)
+        public async Task<Company> GetCompanyByIdAsync(Guid companyId, bool trackChanges)
         {
-            return GetSingleById(companyId, trackChanges);
+            return await GetSingleById(companyId, trackChanges);
         }
 
         public void CreateCompany(Company company)
@@ -30,9 +32,9 @@ namespace WebApplication.Repository.Concrete
             Create(company);
         }
 
-        public IEnumerable<Company> GetCompaniesByIds(IEnumerable<Guid> companyIds, bool trackChanges)
+        public async Task<IEnumerable<Company>> GetCompaniesByIdsAsync(IEnumerable<Guid> companyIds, bool trackChanges)
         {
-            return GetMultipleByIds(companyIds, trackChanges);
+            return await GetMultipleByIds(companyIds, trackChanges);
         }
 
         public void DeleteCompany(Company company)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -33,9 +34,9 @@ namespace WebApplication.Controllers
         [HttpGet]
         [Produces(typeof(IEnumerable<EmployeeDto>))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetEmployees()
+        public async Task<IActionResult> GetEmployees()
         {
-            var employees = _employeeService.GetAllEmployees(trackChanges: false);
+            var employees = await _employeeService.GetAllEmployeesAsync(trackChanges: false);
 
             return Ok(employees);
         }
@@ -51,9 +52,9 @@ namespace WebApplication.Controllers
         [Produces(typeof(EmployeeDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetEmployeeById(Guid id)
+        public async Task<IActionResult> GetEmployeeById(Guid id)
         {
-            var employee = _employeeService.GetEmployeeById(id, trackChanges: false);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id, trackChanges: false);
 
             if (employee == null)
             {
@@ -72,7 +73,7 @@ namespace WebApplication.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetEmployeesByIds([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetEmployeesByIds([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
         {
             if (!ids?.Any() ?? true)
             {
@@ -83,7 +84,7 @@ namespace WebApplication.Controllers
                 return BadRequest(message);
             }
 
-            var employees = _employeeService.GetEmployeesByIds(ids, trackChanges: false);
+            var employees = await _employeeService.GetEmployeesByIdsAsync(ids, trackChanges: false);
             if (!employees?.Any() ?? true)
             {
                 var message = string.Format(ErrorMessages.EmployeesNotFound, ids.Select(id => id.ToString()));
@@ -97,15 +98,15 @@ namespace WebApplication.Controllers
         }
 
         [HttpDelete("{employeeId}")]
-        public IActionResult DeleteEmployee(Guid employeeId)
+        public async Task<IActionResult> DeleteEmployee(Guid employeeId)
         {
-            _employeeService.DeleteEmployee(employeeId);
+            await _employeeService.DeleteEmployeeAsync(employeeId);
 
             return NoContent();
         }
 
         [HttpPut("{employeeId}")]
-        public IActionResult UpdateEmployeeForCompany(Guid employeeId, [FromBody] EmployeeForUpdateDto employee)
+        public async Task<IActionResult> UpdateEmployeeForCompany(Guid employeeId, [FromBody] EmployeeForUpdateDto employee)
         {
             if (!ModelState.IsValid)
             {
@@ -125,7 +126,7 @@ namespace WebApplication.Controllers
                 return BadRequest(message);
             }
 
-            var employeeEntity = _employeeService.GetEmployeeById(employeeId, trackChanges: false);
+            var employeeEntity = await _employeeService.GetEmployeeByIdAsync(employeeId, trackChanges: false);
             if (employeeEntity == null)
             {
                 var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
@@ -135,13 +136,13 @@ namespace WebApplication.Controllers
                 return NotFound(message);
             }
 
-            _employeeService.UpdateEmployee(employee, employeeId);
+            await _employeeService.UpdateEmployeeAsync(employee, employeeId);
 
             return NoContent();
         }
 
         [HttpPatch("{employeeId}")]
-        public IActionResult PartiallyUpdateEmployeeForCompany(Guid employeeId, [FromBody]JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid employeeId, [FromBody]JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -152,7 +153,7 @@ namespace WebApplication.Controllers
                 return BadRequest(message);
             }
 
-            var employeeEntity = _employeeService.GetEmployeeById(employeeId, trackChanges: false);
+            var employeeEntity = await _employeeService.GetEmployeeByIdAsync(employeeId, trackChanges: false);
             if (employeeEntity == null)
             {
                 var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
@@ -162,7 +163,7 @@ namespace WebApplication.Controllers
                 return NotFound(message);
             }
 
-            _employeeService.PatchEmployee(employeeId, patchDoc);
+            await _employeeService.PatchEmployeeAsync(employeeId, patchDoc);
 
             return NoContent();
         }

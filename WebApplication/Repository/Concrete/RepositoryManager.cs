@@ -1,4 +1,5 @@
-﻿using WebApplication.Repository.Interface;
+﻿using System.Threading.Tasks;
+using WebApplication.Repository.Interface;
 
 namespace WebApplication.Repository.Concrete
 {
@@ -39,6 +40,6 @@ namespace WebApplication.Repository.Concrete
             }
         }
 
-        public void Save() => _context.SaveChanges();
+        public Task Save() => _context.SaveChangesAsync();
     }
 }
