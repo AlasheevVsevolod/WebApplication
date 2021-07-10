@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -40,22 +41,14 @@ namespace WebApplication.Controllers
             return Ok(companiesDto);
         }
 
-        [HttpGet("{id}", Name = "GetCompanyById")]
+        [HttpGet("{companyId}", Name = "GetCompanyById")]
         [Produces(typeof(CompanyDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetCompanyById(Guid id)
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
+        public IActionResult GetCompanyById(Guid companyId)
         {
-            var company = await _companyService.GetCompanyByIdAsync(id, trackChanges: false);
-
-            if (company == null)
-            {
-                var message = string.Format(ErrorMessages.CompanyNotFound, id);
-
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
+            var company = HttpContext.Items["company"] as Company;
 
             return Ok(company);
         }
@@ -93,18 +86,9 @@ namespace WebApplication.Controllers
         [Produces(typeof(IEnumerable<EmployeeDto>))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task<IActionResult> GetEmployeesByCompanyId(Guid companyId)
         {
-            var company = await _companyService.GetCompanyByIdAsync(companyId, trackChanges: false);
-            if (company == null)
-            {
-                var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
-
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
             var employees = await _employeeService.GetAllEmployeesForCompanyAsync(companyId, trackChanges: false);
 
             return Ok(employees);
@@ -114,18 +98,9 @@ namespace WebApplication.Controllers
         [Produces(typeof(IEnumerable<EmployeeDto>))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task<IActionResult> GetEmployeeByCompanyId(Guid companyId, Guid employeeId)
         {
-            var company = await _companyService.GetCompanyByIdAsync(companyId, trackChanges: false);
-            if (company == null)
-            {
-                var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
-
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
             var employee = await _employeeService.GetEmployeeForCompanyAsync(companyId, employeeId, trackChanges: false);
 
             if (employee == null)
@@ -147,7 +122,7 @@ namespace WebApplication.Controllers
         {
             var createdCompany = await _companyService.CreateCompanyAsync(company);
 
-            return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id },
+            return CreatedAtRoute("GetCompanyById", new { companyId = createdCompany.Id },
                 createdCompany);
         }
 
@@ -172,18 +147,9 @@ namespace WebApplication.Controllers
         [HttpPost("{companyId}/employees")]
         [Produces(typeof(EmployeeDto))]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task<IActionResult> CreateEmployee(Guid companyId, [FromBody]EmployeeForCreationDto employee)
         {
-            var company = await _companyService.GetCompanyByIdAsync(companyId, trackChanges: false);
-            if (company == null)
-            {
-                var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
-
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
             var createdEmployee = await _employeeService.CreateEmployeeAsync(employee, companyId);
 
             return CreatedAtRoute("GetEmployeeByCompanyId", new { companyId, employeeId = createdEmployee.Id },
@@ -209,32 +175,29 @@ namespace WebApplication.Controllers
         }
 
         [HttpDelete("{companyId}")]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task<IActionResult> DeleteCompany(Guid companyId)
         {
-            await _companyService.DeleteCompanyAsync(companyId);
+            var existingCompany = HttpContext.Items["company"] as Company;
+
+            await _companyService.DeleteCompanyAsync(existingCompany);
 
             return NoContent();
         }
 
         [HttpPut("{companyId}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody]CompanyForUpdateDto company)
         {
-            var companyEntity = await _companyService.GetCompanyByIdAsync(companyId, trackChanges: false);
-            if (companyEntity == null)
-            {
-                var message = string.Format(ErrorMessages.CompanyNotFound, companyId);
+            var companyEntity = HttpContext.Items["company"] as Company;
 
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
-            await _companyService.UpdateCompanyAsync(company, companyId);
+            await _companyService.UpdateCompanyAsync(company, companyEntity);
             return NoContent();
         }
 
         [HttpPatch("{companyId}")]
+        [ServiceFilter(typeof(ValidateCompanyExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateCompany(Guid companyId, [FromBody]JsonPatchDocument<CompanyForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -246,17 +209,9 @@ namespace WebApplication.Controllers
                 return BadRequest(message);
             }
 
-            var companyEntity = await _companyService.GetCompanyByIdAsync(companyId, trackChanges: false);
-            if (companyEntity == null)
-            {
-                var message = string.Format(ErrorMessages.CompaniesNotFound, companyId);
+            var existingCompany = HttpContext.Items["company"] as Company;
 
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
-            await _companyService.PatchCompanyAsync(companyId, patchDoc);
+            await _companyService.PatchCompanyAsync(existingCompany, patchDoc);
 
             return NoContent();
         }

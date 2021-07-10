@@ -12,8 +12,8 @@ namespace WebApplication.Services.Interface
         Task<CompanyDto> GetCompanyByIdAsync(Guid companyId, bool trackChanges);
         Task<IEnumerable<CompanyDto>> GetCompaniesByIdsAsync(IEnumerable<Guid> companyIds, bool trackChanges);
         Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company);
-        Task DeleteCompanyAsync(Guid companyId);
-        Task UpdateCompanyAsync(CompanyForUpdateDto company, Guid companyId);
-        Task PatchCompanyAsync(Guid companyId, JsonPatchDocument<CompanyForUpdateDto> patchDoc);
+        Task DeleteCompanyAsync(Company existingCompany);
+        Task UpdateCompanyAsync(CompanyForUpdateDto company, Company existingCompany);
+        Task PatchCompanyAsync(Company existingCompany, JsonPatchDocument<CompanyForUpdateDto> patchDoc);
     }
 }

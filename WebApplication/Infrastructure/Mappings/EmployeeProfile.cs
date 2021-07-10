@@ -10,6 +10,7 @@ namespace WebApplication.Infrastructure.Mappings
             CreateMap<Employee, EmployeeDto>();
             CreateMap<EmployeeForCreationDto, Employee>();
             CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
+            CreateMap<EmployeeForManipulationDto, Employee>().ReverseMap();
         }
     }
 }

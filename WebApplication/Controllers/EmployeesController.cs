@@ -45,21 +45,21 @@ namespace WebApplication.Controllers
         /// <summary>
         /// Gets employee, based on the give Id
         /// </summary>
-        /// <param name="id">Id of the employee to search by</param>
+        /// <param name="employeeId">Id of the employee to search by</param>
         /// <returns></returns>
         /// <response code="200">Returns found employee</response>
         /// <response code="404">If employee wasn't found</response>
-        [HttpGet("{id}", Name = "GetEmployeeById")]
+        [HttpGet("{employeeId}", Name = "GetEmployeeById")]
         [Produces(typeof(EmployeeDto))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetEmployeeById(Guid id)
+        public async Task<IActionResult> GetEmployeeById(Guid employeeId)
         {
-            var employee = await _employeeService.GetEmployeeByIdAsync(id, trackChanges: false);
+            var employee = await _employeeService.GetEmployeeByIdAsync(employeeId, trackChanges: false);
 
             if (employee == null)
             {
-                var message = string.Format(ErrorMessages.EmployeeNotFound, id);
+                var message = string.Format(ErrorMessages.EmployeeNotFound, employeeId);
 
                 _logger.LogInfo(message);
 
