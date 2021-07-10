@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
+using WebApplication.ActionFilters;
 using WebApplication.Extensions;
 using WebApplication.Logger;
 
@@ -49,6 +50,8 @@ namespace WebApplication
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+
+            services.AddScoped<ValidationFilterAttribute>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

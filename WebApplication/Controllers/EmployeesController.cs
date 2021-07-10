@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.ActionFilters;
 using WebApplication.Infrastructure.Messages;
 using WebApplication.Infrastructure.ModelBinders;
 using WebApplication.Logger;
@@ -106,26 +107,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpPut("{employeeId}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany(Guid employeeId, [FromBody] EmployeeForUpdateDto employee)
         {
-            if (!ModelState.IsValid)
-            {
-                var message = ErrorMessages.InvalidModelState;
-
-                _logger.LogError(message);
-
-                return UnprocessableEntity(ModelState);
-            }
-
-            if (employee == null)
-            {
-                var message = ErrorMessages.EmployeeIsNull;
-
-                _logger.LogInfo(message);
-
-                return BadRequest(message);
-            }
-
             var employeeEntity = await _employeeService.GetEmployeeByIdAsync(employeeId, trackChanges: false);
             if (employeeEntity == null)
             {

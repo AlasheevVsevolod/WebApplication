@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.ActionFilters;
 using WebApplication.Infrastructure.Messages;
 using WebApplication.Infrastructure.ModelBinders;
 using WebApplication.Logger;
@@ -141,26 +142,9 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [Produces(typeof(CompanyDto))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody]CompanyForCreationDto company)
         {
-            if (!ModelState.IsValid)
-            {
-                var message = ErrorMessages.InvalidModelState;
-
-                _logger.LogError(message);
-
-                return UnprocessableEntity(ModelState);
-            }
-
-            if (company == null)
-            {
-                var message = ErrorMessages.CompanyIsNull;
-
-                _logger.LogError(message);
-
-                return BadRequest(message);
-            }
-
             var createdCompany = await _companyService.CreateCompanyAsync(company);
 
             return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id },
@@ -169,26 +153,9 @@ namespace WebApplication.Controllers
 
         [HttpPost("collection")]
         [Produces(typeof(IEnumerable<CompanyDto>))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompanies([FromBody]IEnumerable<CompanyForCreationDto> companies)
         {
-            if (!ModelState.IsValid)
-            {
-                var message = ErrorMessages.InvalidModelState;
-
-                _logger.LogError(message);
-
-                return UnprocessableEntity(ModelState);
-            }
-
-            if (!companies?.Any() ?? true)
-            {
-                var message = string.Format(ErrorMessages.ParametersAreNullOrEmpty);
-
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
             var createdCompanies = new List<CompanyDto>();
             foreach (var company in companies)
             {
@@ -204,26 +171,9 @@ namespace WebApplication.Controllers
 
         [HttpPost("{companyId}/employees")]
         [Produces(typeof(EmployeeDto))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateEmployee(Guid companyId, [FromBody]EmployeeForCreationDto employee)
         {
-            if (!ModelState.IsValid)
-            {
-                var message = ErrorMessages.InvalidModelState;
-
-                _logger.LogError(message);
-
-                return UnprocessableEntity(ModelState);
-            }
-
-            if (employee == null)
-            {
-                var message = ErrorMessages.EmployeeIsNull;
-
-                _logger.LogError(message);
-
-                return BadRequest(message);
-            }
-
             var company = await _companyService.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (company == null)
             {
@@ -242,26 +192,9 @@ namespace WebApplication.Controllers
 
         [HttpPost("{companyId}/employees/collection")]
         [Produces(typeof(IEnumerable<EmployeeDto>))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateEmployees(Guid companyId, [FromBody]IEnumerable<EmployeeForCreationDto> employees)
         {
-            if (!ModelState.IsValid)
-            {
-                var message = ErrorMessages.InvalidModelState;
-
-                _logger.LogError(message);
-
-                return UnprocessableEntity(ModelState);
-            }
-
-            if (!employees?.Any() ?? true)
-            {
-                var message = string.Format(ErrorMessages.ParametersAreNullOrEmpty);
-
-                _logger.LogInfo(message);
-
-                return NotFound(message);
-            }
-
             var createdEmployees = new List<EmployeeDto>();
             foreach (var employee in employees)
             {
@@ -284,26 +217,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpPut("{companyId}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody]CompanyForUpdateDto company)
         {
-            if (!ModelState.IsValid)
-            {
-                var message = ErrorMessages.InvalidModelState;
-
-                _logger.LogError(message);
-
-                return UnprocessableEntity(ModelState);
-            }
-
-            if (company == null)
-            {
-                var message = ErrorMessages.CompanyIsNull;
-
-                _logger.LogError(message);
-
-                return BadRequest(message);
-            }
-
             var companyEntity = await _companyService.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (companyEntity == null)
             {
