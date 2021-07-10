@@ -40,6 +40,13 @@ namespace WebApplication.Services.Concrete
             return companyDto;
         }
 
+        public CompanyDto GetCompanyById(Company existingCompany)
+        {
+            var companyDto = _mapper.Map<CompanyDto>(existingCompany);
+
+            return companyDto;
+        }
+
         public async Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company)
         {
             var companyEntity = _mapper.Map<Company>(company);
@@ -60,34 +67,26 @@ namespace WebApplication.Services.Concrete
             return companiesDto;
         }
 
-        public async Task DeleteCompanyAsync(Guid companyId)
+        public async Task DeleteCompanyAsync(Company existingCompany)
         {
-            var existingCompany = await _companyRepository.GetCompanyByIdAsync(companyId, trackChanges: false);
-            if (existingCompany == null)
-            {
-                return;
-            }
-
             _companyRepository.DeleteCompany(existingCompany);
             await _repositoryManager.Save();
         }
 
-        public async Task UpdateCompanyAsync(CompanyForUpdateDto company, Guid companyId)
+        public async Task UpdateCompanyAsync(CompanyForUpdateDto company, Company existingCompany)
         {
-            var existingCompany = await _companyRepository.GetCompanyByIdAsync(companyId, trackChanges: true);
             _mapper.Map(company, existingCompany);
 
             await _repositoryManager.Save();
         }
 
-        public async Task PatchCompanyAsync(Guid companyId, JsonPatchDocument<CompanyForUpdateDto> patchDoc)
+        public async Task PatchCompanyAsync(Company existingCompany, JsonPatchDocument<CompanyForUpdateDto> patchDoc)
         {
-            var company = await _companyRepository.GetCompanyByIdAsync(companyId, trackChanges: true);
-            var companyToPatch = _mapper.Map<CompanyForUpdateDto>(company);
+            var companyToPatch = _mapper.Map<CompanyForUpdateDto>(existingCompany);
 
             patchDoc.ApplyTo(companyToPatch);
 
-            _mapper.Map(companyToPatch, company);
+            _mapper.Map(companyToPatch, existingCompany);
 
             await _repositoryManager.Save();
         }

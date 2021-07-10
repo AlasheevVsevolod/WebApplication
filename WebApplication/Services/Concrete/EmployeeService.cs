@@ -40,6 +40,13 @@ namespace WebApplication.Services.Concrete
             return employeeDto;
         }
 
+        public EmployeeDto GetEmployeeById(Employee existingEmployee)
+        {
+            var employeeDto = _mapper.Map<EmployeeDto>(existingEmployee);
+
+            return employeeDto;
+        }
+
         public async Task<EmployeeDto> GetEmployeeForCompanyAsync(Guid companyId, Guid employeeId, bool trackChanges)
         {
             var employee = await _employeeRepository.GetEmployeeForCompanyAsync(companyId, employeeId, trackChanges);
@@ -80,34 +87,26 @@ namespace WebApplication.Services.Concrete
             return employeesDto;
         }
 
-        public async Task DeleteEmployeeAsync(Guid employeeId)
+        public async Task DeleteEmployeeAsync(Employee existingEmployee)
         {
-            var existingEmployee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, trackChanges: false);
-            if (existingEmployee == null)
-            {
-                return;
-            }
-
             _employeeRepository.DeleteEmployee(existingEmployee);
             await _repositoryManager.Save();
         }
 
-        public async Task UpdateEmployeeAsync(EmployeeForUpdateDto employee, Guid employeeId)
+        public async Task UpdateEmployeeAsync(EmployeeForUpdateDto employee, Employee existingEmployee)
         {
-            var existingEmployee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, trackChanges: true);
             _mapper.Map(employee, existingEmployee);
 
             await _repositoryManager.Save();
         }
 
-        public async Task PatchEmployeeAsync(Guid employeeId, JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        public async Task PatchEmployeeAsync(Employee existingEmployee, JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
         {
-            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, trackChanges: true);
-            var employeeToPatch = _mapper.Map<EmployeeForUpdateDto>(employee);
+            var employeeToPatch = _mapper.Map<EmployeeForUpdateDto>(existingEmployee);
 
             patchDoc.ApplyTo(employeeToPatch);
 
-            _mapper.Map(employeeToPatch, employee);
+            _mapper.Map(employeeToPatch, existingEmployee);
 
             await _repositoryManager.Save();
         }
